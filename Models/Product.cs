@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using RestApiExample.Models.Embeddables;
 
@@ -22,10 +21,9 @@ namespace RestApiExample.Models
         public Inventory Inventory { get; set; } = new();
 
         [Required]
-        public ProductMetadata Metadata { get; set; } = new();
+        public ProductMetadata ProductMetadata { get; set; } = new();
 
         public bool IsActive { get; set; } = true;
-
         public bool IsFeatured { get; set; } = false;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
@@ -33,25 +31,36 @@ namespace RestApiExample.Models
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
+            // Check for whitespace-only product name
             if (string.IsNullOrWhiteSpace(Name))
             {
-                yield return new ValidationResult("Product name cannot be whitespace.", new[] { nameof(Name) });
+                yield return new ValidationResult(
+                    "Product name cannot be whitespace.",
+                    new[] { nameof(Name) });
             }
 
-            var pricingResults = new List<ValidationResult>();
-            Validator.TryValidateObject(Pricing, new ValidationContext(Pricing), pricingResults, true);
-            foreach (var result in pricingResults)
+            // Validate owned complex objects
+            foreach (var result in ValidateObject(Pricing, nameof(Pricing)))
                 yield return result;
 
-            var inventoryResults = new List<ValidationResult>();
-            Validator.TryValidateObject(Inventory, new ValidationContext(Inventory), inventoryResults, true);
-            foreach (var result in inventoryResults)
+            foreach (var result in ValidateObject(Inventory, nameof(Inventory)))
                 yield return result;
 
-            var metadataResults = new List<ValidationResult>();
-            Validator.TryValidateObject(Metadata, new ValidationContext(Metadata), metadataResults, true);
-            foreach (var result in metadataResults)
+            foreach (var result in ValidateObject(ProductMetadata, nameof(ProductMetadata)))
                 yield return result;
+        }
+
+        private static IEnumerable<ValidationResult> ValidateObject(object obj, string memberName)
+        {
+            var results = new List<ValidationResult>();
+            var context = new ValidationContext(obj);
+            Validator.TryValidateObject(obj, context, results, validateAllProperties: true);
+
+            foreach (var result in results)
+            {
+                // Associate the error with the parent property
+                yield return new ValidationResult(result.ErrorMessage ?? "Invalid value.", new[] { memberName });
+            }
         }
     }
 }

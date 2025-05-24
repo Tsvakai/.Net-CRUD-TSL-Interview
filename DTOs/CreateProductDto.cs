@@ -18,7 +18,7 @@ namespace RestApiExample.DTOs
         public InventoryDto Inventory { get; set; } = new();
 
         [Required]
-        public ProductMetadataDto Metadata { get; set; } = new();
+        public ProductMetadataDto ProductMetadata { get; set; } = new();
 
         public bool IsActive { get; set; } = true;
 
@@ -41,7 +41,7 @@ namespace RestApiExample.DTOs
             foreach (var result in inventoryResults) yield return result;
 
             var metadataResults = new List<ValidationResult>();
-            Validator.TryValidateObject(Metadata, new ValidationContext(Metadata), metadataResults, true);
+            Validator.TryValidateObject(ProductMetadata, new ValidationContext(ProductMetadata), metadataResults, true);
             foreach (var result in metadataResults) yield return result;
         }
     }
