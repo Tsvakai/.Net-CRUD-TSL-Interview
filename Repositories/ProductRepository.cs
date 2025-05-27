@@ -45,5 +45,12 @@ namespace RestApiExample.Repositories
             _context.Products.Remove(product);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<Product?> GetByNameAsync(string name)
+{
+    return await _context.Products
+                         .FirstOrDefaultAsync(p => p.Name.ToLower() == name.ToLower());
+}
+
     }
 }

@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>RestApiExample</name>
+    </assembly>
+    <members>
+        <member name="T:RestApiExample.Controllers.ProductsController">
+            <summary>
+            Controller for managing product resources.
+            </summary>
+        </member>
+        <member name="M:RestApiExample.Controllers.ProductsController.GetProducts(System.Int32,System.Int32)">
+            <summary>
+            Retrieves a paginated list of products.
+            </summary>
+            <param name="pageNumber">The page number (1-based).</param>
+            <param name="pageSize">The number of items per page.</param>
+            <returns>A paginated list of products.</returns>
+            <response code="200">Returns the list of products.</response>
+        </member>
+        <member name="M:RestApiExample.Controllers.ProductsController.GetProduct(System.Int32)">
+            <summary>
+            Retrieves a single product by its ID.
+            </summary>
+            <param name="id">The ID of the product.</param>
+            <returns>The requested product.</returns>
+            <response code="200">Returns the requested product.</response>
+            <response code="404">If the product is not found.</response>
+        </member>
+        <member name="M:RestApiExample.Controllers.ProductsController.CreateProduct(RestApiExample.DTOs.CreateProductDto)">
+            <summary>
+            Creates a new product.
+            </summary>
+            <param name="createDto">The product details to create.</param>
+            <returns>The newly created product.</returns>
+            <response code="201">Returns the newly created product.</response>
+            <response code="400">If the validation fails.</response>
+        </member>
+        <member name="M:RestApiExample.Controllers.ProductsController.UpdateProduct(System.Int32,RestApiExample.DTOs.UpdateProductDto)">
+            <summary>
+            Updates an existing product.
+            </summary>
+            <param name="id">The ID of the product to update.</param>
+            <param name="updateDto">The updated product details.</param>
+            <returns>The updated product.</returns>
+            <response code="200">Returns the updated product.</response>
+            <response code="400">If the validation fails.</response>
+            <response code="404">If the product is not found.</response>
+        </member>
+        <member name="M:RestApiExample.Controllers.ProductsController.DeleteProduct(System.Int32)">
+            <summary>
+            Deletes a product by its ID.
+            </summary>
+            <param name="id">The ID of the product to delete.</param>
+            <response code="204">If the deletion is successful.</response>
+            <response code="404">If the product is not found.</response>
+        </member>
+        <member name="T:RestApiExample.Exceptions.NotFoundException">
+            <summary>
+            Thrown when a requested entity is not found.
+            </summary>
+        </member>
+        <member name="T:RestApiExample.Exceptions.ServiceException">
+            <summary>
+            Thrown for unexpected service errors, wraps lower-level exceptions.
+            </summary>
+        </member>
+        <member name="T:RestApiExample.Exceptions.ValidationException">
+            <summary>
+            Thrown when validation of input data fails.
+            </summary>
+        </member>
+    </members>
+</doc>

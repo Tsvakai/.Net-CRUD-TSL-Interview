@@ -1,12 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
 using RestApiExample.DTOs;
-using RestApiExample.Services;
 using RestApiExample.Exceptions;
+using RestApiExample.Services;
 
 namespace RestApiExample.Controllers;
 
+/// <summary>
+/// Controller for managing product resources.
+/// </summary>
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/products")]
 public class ProductsController : ControllerBase
 {
     private readonly IProductService _productService;
@@ -18,8 +21,15 @@ public class ProductsController : ControllerBase
         _logger = logger;
     }
 
-    // GET: api/products?pageNumber=1&pageSize=10
+    /// <summary>
+    /// Retrieves a paginated list of products.
+    /// </summary>
+    /// <param name="pageNumber">The page number (1-based).</param>
+    /// <param name="pageSize">The number of items per page.</param>
+    /// <returns>A paginated list of products.</returns>
+    /// <response code="200">Returns the list of products.</response>
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetProducts([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
     {
         var (products, totalCount) = await _productService.GetAllProductsAsync(pageNumber, pageSize);
@@ -32,8 +42,16 @@ public class ProductsController : ControllerBase
         });
     }
 
-    // GET: api/products/{id}
+    /// <summary>
+    /// Retrieves a single product by its ID.
+    /// </summary>
+    /// <param name="id">The ID of the product.</param>
+    /// <returns>The requested product.</returns>
+    /// <response code="200">Returns the requested product.</response>
+    /// <response code="404">If the product is not found.</response>
     [HttpGet("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetProduct(int id)
     {
         try
@@ -48,8 +66,16 @@ public class ProductsController : ControllerBase
         }
     }
 
-    // POST: api/products
+    /// <summary>
+    /// Creates a new product.
+    /// </summary>
+    /// <param name="createDto">The product details to create.</param>
+    /// <returns>The newly created product.</returns>
+    /// <response code="201">Returns the newly created product.</response>
+    /// <response code="400">If the validation fails.</response>
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> CreateProduct([FromBody] CreateProductDto createDto)
     {
         if (!ModelState.IsValid)
@@ -67,8 +93,19 @@ public class ProductsController : ControllerBase
         }
     }
 
-    // PUT: api/products/{id}
+    /// <summary>
+    /// Updates an existing product.
+    /// </summary>
+    /// <param name="id">The ID of the product to update.</param>
+    /// <param name="updateDto">The updated product details.</param>
+    /// <returns>The updated product.</returns>
+    /// <response code="200">Returns the updated product.</response>
+    /// <response code="400">If the validation fails.</response>
+    /// <response code="404">If the product is not found.</response>
     [HttpPut("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateProduct(int id, [FromBody] UpdateProductDto updateDto)
     {
         if (!ModelState.IsValid)
@@ -91,8 +128,15 @@ public class ProductsController : ControllerBase
         }
     }
 
-    // DELETE: api/products/{id}
+    /// <summary>
+    /// Deletes a product by its ID.
+    /// </summary>
+    /// <param name="id">The ID of the product to delete.</param>
+    /// <response code="204">If the deletion is successful.</response>
+    /// <response code="404">If the product is not found.</response>
     [HttpDelete("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteProduct(int id)
     {
         try

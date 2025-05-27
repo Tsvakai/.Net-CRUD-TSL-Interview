@@ -9,5 +9,7 @@ namespace RestApiExample.Repositories
         Task<Product> CreateAsync(Product product);
         Task UpdateAsync(Product product);
         Task DeleteAsync(Product product);
+        Task<Product?> GetByNameAsync(string name);
+
     }
 }

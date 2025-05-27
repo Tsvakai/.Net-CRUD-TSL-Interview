@@ -74,26 +74,34 @@ public class ProductService : IProductService
     }
 
     public async Task<ProductDto> CreateProductAsync(CreateProductDto createProductDto)
+{
+    _logger.LogInformation("Creating a new product");
+
+    if (createProductDto == null)
     {
-        _logger.LogInformation("Creating a new product");
-
-        if (createProductDto == null)
-        {
-            throw new ValidationException("Product data must be provided.");
-        }
-
-        try
-        {
-            var product = _mapper.Map<Product>(createProductDto);
-            var createdProduct = await _repository.CreateAsync(product);
-            return _mapper.Map<ProductDto>(createdProduct);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error occurred while creating a product.");
-            throw new ServiceException("Failed to create product.", ex);
-        }
+        throw new ValidationException("Product data must be provided.");
     }
+
+    try
+    {
+        // Check for duplicate product name
+        var existingProduct = await _repository.GetByNameAsync(createProductDto.Name);
+        if (existingProduct != null)
+        {
+            throw new ValidationException($"Product with name '{createProductDto.Name}' already exists.");
+        }
+
+        var product = _mapper.Map<Product>(createProductDto);
+        var createdProduct = await _repository.CreateAsync(product);
+        return _mapper.Map<ProductDto>(createdProduct);
+    }
+    catch (Exception ex) when (ex is not ValidationException)
+    {
+        _logger.LogError(ex, "Error occurred while creating a product.");
+        throw new ServiceException("Failed to create product.", ex);
+    }
+}
+
 
     public async Task<ProductDto> UpdateProductAsync(int id, UpdateProductDto updateProductDto)
     {

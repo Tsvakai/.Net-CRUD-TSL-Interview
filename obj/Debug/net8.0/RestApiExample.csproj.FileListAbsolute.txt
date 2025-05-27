@@ -46,3 +46,4 @@
 /home/tafadzwa/RestApiExample/obj/Debug/net8.0/RestApiExample.genruntimeconfig.cache
 /home/tafadzwa/RestApiExample/obj/Debug/net8.0/ref/RestApiExample.dll
 /home/tafadzwa/RestApiExample/obj/Debug/net8.0/RestApiExample.sourcelink.json
+/home/tafadzwa/RestApiExample/bin/Debug/net8.0/RestApiExample.xml
